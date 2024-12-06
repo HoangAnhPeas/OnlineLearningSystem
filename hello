@@ -17,3 +17,6 @@ OnlineLearningSystem/
 │       └── app.js         # Xử lý giao diện
 │
 └── package.json           # Quản lý các package Node.js
+
+
+dùng lệnh này trong terminal để chạy: node backend/app.js 
