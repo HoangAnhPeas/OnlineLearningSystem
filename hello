@@ -1,1 +1,19 @@
-hi there
+OnlineLearningSystem/
+│
+├── backend/
+│   ├── config/
+│   │   └── db.js          # Cấu hình kết nối MySQL
+│   ├── routes/
+│   │   └── userRoutes.js  # API liên quan đến người dùng
+│   ├── controllers/
+│   │   └── userController.js  # Xử lý logic người dùng
+│   ├── app.js             # Tệp chính cho server
+│
+├── frontend/
+│   ├── index.html         # Giao diện chính
+│   ├── css/
+│   │   └── style.css      # Định dạng giao diện
+│   ├── js/
+│       └── app.js         # Xử lý giao diện
+│
+└── package.json           # Quản lý các package Node.js
