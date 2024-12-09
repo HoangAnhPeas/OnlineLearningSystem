@@ -2,51 +2,61 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
-// Đăng nhập
+// Route login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    console.log(`Attempting login with email: ${email}`);  // Log email để kiểm tra
 
     try {
-        // Kiểm tra thông tin đăng nhập trong cơ sở dữ liệu
-        const [rows] = await db.execute('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
-        console.log(rows);  // In kết quả từ cơ sở dữ liệu để kiểm tra
+        // Kiểm tra email và mật khẩu trong DB
+        const [users] = await db.execute('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
 
-        if (rows.length > 0) {
-            // Nếu có kết quả, trả về thông báo đăng nhập thành công
-            res.json({ message: 'Login successful', user: rows[0] });
+        if (users.length > 0) {
+            // Nếu tìm thấy thông tin hợp lệ, trả về thông tin người dùng
+            return res.json({
+                message: 'Login successful',
+                user: {
+                    id: users[0].UserID, // Gửi thông tin ID và tên người dùng
+                    name: users[0].Name,
+                    email: users[0].Email
+                }
+            });
         } else {
-            // Nếu không có kết quả, trả về thông báo đăng nhập thất bại
-            res.status(401).json({ message: 'Invalid credentials' });
+            // Nếu thông tin sai
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 
 // Lấy danh sách khóa học
 router.get('/courses', async (req, res) => {
     try {
-        // Lấy danh sách khóa học từ cơ sở dữ liệu
         const [rows] = await db.execute('SELECT * FROM courses');
-        res.json(rows);  // Trả về danh sách khóa học dưới dạng JSON
+        res.json(rows);
     } catch (error) {
         console.error('Error fetching courses:', error);
         res.status(500).json({ error: error.message });
     }
 });
 
-// Lấy danh sách người dùng
-router.get('/users', async (req, res) => {
+// Route để lấy thông tin người dùng theo ID
+router.get('/user/:id', async (req, res) => {
+    const userId = req.params.id;
+
     try {
-        // Lấy danh sách người dùng từ cơ sở dữ liệu
-        const [rows] = await db.execute('SELECT * FROM users');
-        res.json(rows);  // Trả về danh sách người dùng dưới dạng JSON
+        const [rows] = await db.execute('SELECT * FROM users WHERE UserID = ?', [userId]);
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching user data:', error);
         res.status(500).json({ error: error.message });
     }
 });
 
+// Export router một lần duy nhất
 module.exports = router;
