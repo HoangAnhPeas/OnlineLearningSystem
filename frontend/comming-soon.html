@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Page Body */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+      flex-direction: column;
+    }
+
+    /* Main Heading */
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    /* Icon Styling */
+    .icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    /* Button Styles */
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    /* Button Hover */
+    .btn:hover {
+      background-color: #d3d3d3;
+      transform: translateY(-3px);
+    }
+
+    /* Text */
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Icon Section -->
+  <i class="fa-solid fa-clock icon"></i>
+  <h1>Chức năng chưa khả dụng</h1>
+  <p>Chúng tôi đang trong giai đoạn phát triển. Cảm ơn bạn đã thông cảm!</p>
+
+  <!-- Back Button -->
+  <button class="btn" onclick="window.history.back();">
+    <i class="fa-solid fa-arrow-left"></i> Quay lại
+  </button>
+</body>
+</html>
