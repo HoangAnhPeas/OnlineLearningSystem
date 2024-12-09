@@ -58,5 +58,25 @@ router.get('/user/:id', async (req, res) => {
     }
 });
 
+// Route lấy thông tin lớp học trong ngày
+router.get('/daily-classes', async (req, res) => {
+    try {
+        const today = new Date().toISOString().slice(0, 10); // Lấy ngày hiện tại (YYYY-MM-DD)
+        const [results] = await db.execute(`
+            SELECT l.LessonID, u.Name as student_name, t.TeacherID, t.AvailableSlots, 
+                l.StartDate, l.EndDate, l.TimeStart, l.TimeEnd
+            FROM Lessons l
+            LEFT JOIN Users u ON l.StudentID = u.UserID
+            LEFT JOIN Teachers t ON l.TeacherID = t.TeacherID
+            WHERE DATE(l.StartDate) = ?
+        `, [today]);
+        
+        res.status(200).json(results);
+    } catch (error) {
+        console.error('Error fetching daily classes:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Export router một lần duy nhất
 module.exports = router;

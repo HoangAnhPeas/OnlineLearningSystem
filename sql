@@ -44,7 +44,7 @@ INSERT INTO Teachers (AvailableSlots) VALUES
 
 
 INSERT INTO Users (Name, Email, Password, TeacherCheck) VALUES
-('Tạ Thị Hậu', 'lolikun221@gmail.com', '22112003', 'No'),
+('Tạ Thị Hậu', 'lolikun221@gmail.com', '22012003', 'No'),
 ('Đỗ Hoàng Anh', 'hoanganhpeas@gmail.com', '08062003', 'No'),
 ('Nguyễn Văn An', 'an.nguyen@example.com', 'password123', 'No'),
 ('Trần Văn Bình', 'binh.tran@example.com', 'password123', 'No'),

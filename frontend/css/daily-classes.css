@@ -1,0 +1,278 @@
+/* Reset cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container chính */
+.container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Navbar */
+nav {
+    width: 20%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    transition: width 1s ease;
+}
+
+nav.collapsed {
+    width: 60px;
+}
+
+nav .logo img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    transition: width 1s ease, height 1s ease;
+}
+
+nav.collapsed .logo img {
+    width: 30px;
+    height: 30px;
+}
+
+nav ul {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+}
+
+nav ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+nav ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #ecf0f1;
+    transition: all 1s ease;
+}
+
+nav ul li a i {
+    font-size: 20px;
+}
+
+nav ul li a span {
+    margin-left: 10px;
+    white-space: nowrap;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+nav.collapsed ul li a span {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* Hiệu ứng hover */
+nav ul li a:hover {
+    color: #3498db;
+}
+
+/* Main content */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: margin-left 1s ease;
+}
+
+header {
+    background-color: #34495e;
+    color: #ecf0f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+header .header-left button {
+    background: none;
+    border: none;
+    color: #ecf0f1;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Dropdown trong header */
+header .header-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+header .header-right .dropdown {
+    cursor: pointer;
+    position: relative;
+}
+
+header .header-right .dropdown i {
+    font-size: 24px;
+    transition: transform 0.2s ease;
+}
+
+header .header-right .dropdown:hover i {
+    transform: scale(1.1);
+    color: #3498db;
+}
+
+header .header-right .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 1000;
+    flex-direction: column;
+    width: 150px;
+    animation: fadeIn 0.3s ease;
+}
+
+header .header-right .dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+header .header-right .dropdown-menu a {
+    padding: 10px;
+    text-decoration: none;
+    color: #34495e;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+header .header-right .dropdown-menu a:hover {
+    background-color: #ecf0f1;
+}
+
+/* Hiệu ứng fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Main Body */
+main {
+    flex: 1;
+    padding: 20px;
+    background-color: #ecf0f1;
+}
+
+main h1, main p {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1,
+p {
+    text-transform: uppercase;
+}
+
+.date-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.date-selector select {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto 20px;
+    background-color: white;
+}
+
+thead th {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 10px;
+    text-align: left;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    background-color: #34495e;
+    color: #ecf0f1;
+    border: none;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* Footer */
+footer {
+    background-color: #34495e;
+    color: #ecf0f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+/* Đảm bảo responsive */
+@media (max-width: 768px) {
+    nav.collapsed {
+        width: 60px;
+    }
+
+    nav ul li a {
+        display: none;
+    }
+
+    nav ul li i {
+        font-size: 1.5em;
+    }
+}
