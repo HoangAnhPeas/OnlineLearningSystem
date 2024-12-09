@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navbar = document.getElementById('navbar');
     const studentName = document.getElementById('studentName');
 
-    // Toggle navbar
+ // Toggle navbar
     toggleNavbar.addEventListener('click', () => {
         navbar.classList.toggle('collapsed');
     });
