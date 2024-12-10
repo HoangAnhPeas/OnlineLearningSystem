@@ -1,26 +1,27 @@
-let currentPage = 1; // Biến lưu trang hiện tại
+let currentPage = 1; // Trang hiện tại
 let rowsPerPage = 10; // Số hàng hiển thị mỗi trang
-let classData = []; // Lưu dữ liệu lớp học sau khi gọi API
+let classData = []; // Dữ liệu lớp học từ API
 
 document.addEventListener('DOMContentLoaded', async () => {
     const toggleNavbar = document.getElementById('toggleNavbar');
     const navbar = document.getElementById('navbar');
+    
+    // Xử lý navbar toggle
+    toggleNavbar.addEventListener('click', () => {
+        navbar.classList.toggle('collapsed');
+    });
+
     await populateDateSelector();
     await updateSelectedDateUI();
     await fetchDailyClasses();
 });
 
- // Toggle navbar
- toggleNavbar.addEventListener('click', () => {
-    navbar.classList.toggle('collapsed');
-});
-
-// Populating the dropdown with the days of the week
+// Tạo danh sách ngày trong tuần cho dropdown
 async function populateDateSelector() {
     const datePicker = document.getElementById('datePicker');
     const today = new Date();
 
-    const days = ['Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy', 'Chủ nhật'];
+    const days = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
 
     for (let i = 0; i < 7; i++) {
         const dateOption = new Date();
@@ -30,7 +31,7 @@ async function populateDateSelector() {
 
         const option = document.createElement('option');
         option.value = dateString;
-        option.textContent = `${days[i]} - ${dateString}`;
+        option.textContent = `${days[dateOption.getDay()]} - ${dateString}`;
 
         datePicker.appendChild(option);
     }
@@ -42,7 +43,7 @@ async function populateDateSelector() {
     });
 }
 
-// Cập nhật thông tin ngày và hiển thị trên giao diện
+// Cập nhật ngày và hiển thị thông tin trên giao diện
 async function updateSelectedDateUI() {
     const datePicker = document.getElementById('datePicker');
     const selectedDate = new Date(datePicker.value);
@@ -55,7 +56,7 @@ async function updateSelectedDateUI() {
     document.getElementById('selectedDate').textContent = formattedDate;
 }
 
-// Gọi backend để lấy thông tin lớp học
+// Gọi API để lấy danh sách lớp học
 async function fetchDailyClasses() {
     const selectedDate = document.getElementById('datePicker').value;
 
@@ -69,21 +70,22 @@ async function fetchDailyClasses() {
         const data = await response.json();
 
         if (response.ok) {
-            classData = data; // Lưu dữ liệu
-            renderTable();
-            updatePagination();
+            classData = data || []; // Cập nhật dữ liệu mới
+            currentPage = 1; // Reset về trang đầu tiên
+            renderTable(); // Hiển thị bảng dữ liệu
+            updatePagination(); // Cập nhật điều hướng phân trang
         } else {
-            alert('Không thể lấy thông tin');
+            alert('Không thể lấy thông tin lớp học.');
         }
     } catch (error) {
         console.error('Error fetching daily classes', error);
     }
 }
 
-// Render thông tin lớp học lên bảng theo phân trang
+// Hiển thị bảng dữ liệu theo trang
 function renderTable() {
     const tableBody = document.getElementById('classTableBody');
-    tableBody.innerHTML = ''; // Xóa dữ liệu trước khi render lại
+    tableBody.innerHTML = ''; // Xóa dữ liệu cũ
 
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = Math.min(startIndex + rowsPerPage, classData.length);
@@ -96,7 +98,7 @@ function renderTable() {
     for (let i = startIndex; i < endIndex; i++) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${startIndex + i + 1}</td>
+            <td>${i - startIndex + 1}</td>
             <td>${classData[i].LessonID || 'N/A'}</td>
             <td>${classData[i].student_name || 'Chưa xác định'}</td>
             <td>${classData[i].TeacherID || 'Chưa xác định'}</td>
@@ -109,13 +111,18 @@ function renderTable() {
     }
 }
 
-// Cập nhật các nút điều hướng
+// Cập nhật các nút phân trang
 function updatePagination() {
     const prevButton = document.getElementById('prevPage');
     const nextButton = document.getElementById('nextPage');
-    
+    const pageNumber = document.getElementById('pageNumber');
+
+    const totalPages = Math.ceil(classData.length / rowsPerPage);
+
     prevButton.disabled = currentPage === 1;
-    nextButton.disabled = currentPage * rowsPerPage >= classData.length;
+    nextButton.disabled = currentPage >= totalPages;
+
+    pageNumber.textContent = `${currentPage}/${totalPages}`;
 
     prevButton.onclick = () => {
         if (currentPage > 1) {
@@ -126,7 +133,7 @@ function updatePagination() {
     };
 
     nextButton.onclick = () => {
-        if (currentPage * rowsPerPage < classData.length) {
+        if (currentPage < totalPages) {
             currentPage++;
             renderTable();
             updatePagination();
