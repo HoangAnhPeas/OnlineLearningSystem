@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+    const toggleNavbar = document.getElementById('toggleNavbar');
+    const navbar = document.getElementById('navbar');
+    
+    // Xử lý navbar toggle
+    toggleNavbar.addEventListener('click', () => {
+        navbar.classList.toggle('collapsed');
+    });
+
     await fetchClassList();
     setPagination();
 }
