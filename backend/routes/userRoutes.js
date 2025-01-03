@@ -61,17 +61,32 @@ router.get('/user/:id', async (req, res) => {
 // Route lấy thông tin lớp học trong ngày
 router.get('/daily-classes', async (req, res) => {
     try {
-        const today = new Date().toISOString().slice(0, 10); // Lấy ngày hiện tại (YYYY-MM-DD)
+        const dateParam = req.query.date;
+        const selectedDate = new Date(dateParam);
+        const weekday = selectedDate.getDay(); // Ngày trong tuần (0: Chủ nhật, 1: Thứ hai,...)
+
         const [results] = await db.execute(`
-            SELECT l.LessonID, u.Name as student_name, t.TeacherID, t.AvailableSlots, 
-                l.StartDate, l.EndDate, l.TimeStart, l.TimeEnd
+            SELECT 
+                sub.SubjectCode AS ClassCode, 
+                sub.SubjectName AS ClassName, 
+                t.TeacherName, 
+                l.TimeStart, 
+                l.TimeEnd, 
+                sub.SubjectGroup AS SubjectGroup, 
+                sub.Major AS Major
             FROM Lessons l
-            LEFT JOIN Users u ON l.StudentID = u.UserID
-            LEFT JOIN Teachers t ON l.TeacherID = t.TeacherID
-            WHERE DATE(l.StartDate) = ?
-        `, [today]);
-        
-        res.status(200).json(results);
+            INNER JOIN Subjects sub ON l.SubjectID = sub.SubjectID
+            INNER JOIN Teachers t ON l.TeacherID = t.TeacherID
+            WHERE l.WeekDay = ?
+        `, [weekday]);
+
+        const formattedResults = results.map(row => ({
+            ...row,
+            TimeStart: `${Math.floor(row.TimeStart / 100)}:${String(row.TimeStart % 100).padStart(2, '0')}`,
+            TimeEnd: `${Math.floor(row.TimeEnd / 100)}:${String(row.TimeEnd % 100).padStart(2, '0')}`
+        }));
+
+        res.status(200).json(formattedResults);
     } catch (error) {
         console.error('Error fetching daily classes:', error);
         res.status(500).json({ error: error.message });

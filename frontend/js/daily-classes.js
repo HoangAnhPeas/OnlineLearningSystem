@@ -5,7 +5,7 @@ let classData = []; // Dữ liệu lớp học từ API
 document.addEventListener('DOMContentLoaded', async () => {
     const toggleNavbar = document.getElementById('toggleNavbar');
     const navbar = document.getElementById('navbar');
-    
+
     // Xử lý navbar toggle
     toggleNavbar.addEventListener('click', () => {
         navbar.classList.toggle('collapsed');
@@ -85,27 +85,28 @@ async function fetchDailyClasses() {
 // Hiển thị bảng dữ liệu theo trang
 function renderTable() {
     const tableBody = document.getElementById('classTableBody');
-    tableBody.innerHTML = ''; // Xóa dữ liệu cũ
-
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = Math.min(startIndex + rowsPerPage, classData.length);
+    tableBody.innerHTML = ''; // Xóa dữ liệu cũ trước khi render lại
 
     if (!classData || classData.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="8">Không có thông tin lớp học trong ngày đã chọn</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8">Không có thông tin lớp học trong ngày hôm nay</td></tr>';
         return;
     }
 
-    for (let i = startIndex; i < endIndex; i++) {
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = Math.min(start + rowsPerPage, classData.length);
+
+    for (let i = start; i < end; i++) {
+        const row = classData[i];
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${i - startIndex + 1}</td>
-            <td>${classData[i].LessonID || 'N/A'}</td>
-            <td>${classData[i].student_name || 'Chưa xác định'}</td>
-            <td>${classData[i].TeacherID || 'Chưa xác định'}</td>
-            <td>${classData[i].StartDate || 'N/A'}</td>
-            <td>${classData[i].EndDate || 'N/A'}</td>
-            <td>${classData[i].Subject || 'N/A'}</td>
-            <td>${classData[i].Department || 'N/A'}</td>
+            <td>${i + 1}</td>
+            <td>${row.ClassCode || 'N/A'}</td>
+            <td>${row.ClassName || 'Chưa xác định'}</td>
+            <td>${row.TeacherName || 'Chưa xác định'}</td>
+            <td>${row.TimeStart || 'N/A'}</td>
+            <td>${row.TimeEnd || 'N/A'}</td>
+            <td>${row.SubjectGroup || 'N/A'}</td>
+            <td>${row.Major || 'N/A'}</td>
         `;
         tableBody.appendChild(tr);
     }
