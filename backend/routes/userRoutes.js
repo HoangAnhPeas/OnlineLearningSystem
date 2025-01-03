@@ -66,7 +66,7 @@ router.get('/daily-classes', async (req, res) => {
         const weekday = selectedDate.getDay(); // Ngày trong tuần (0: Chủ nhật, 1: Thứ hai,...)
 
         const [results] = await db.execute(`
-            SELECT 
+            SELECT DISTINCT
                 sub.SubjectCode AS ClassCode, 
                 sub.SubjectName AS ClassName, 
                 t.TeacherName, 
@@ -89,6 +89,35 @@ router.get('/daily-classes', async (req, res) => {
         res.status(200).json(formattedResults);
     } catch (error) {
         console.error('Error fetching daily classes:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route để lấy danh sách lớp học
+router.get('/class-list', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    try {
+        const [rows] = await db.execute(`
+            SELECT 
+                s.SubjectCode AS ClassCode, 
+                s.SubjectName AS ClassName, 
+                s.SubjectGroup AS Subject, 
+                s.Major AS Department, 
+                s.Link AS TeamsLink 
+            FROM Lessons l
+            INNER JOIN Subjects s ON l.SubjectID = s.SubjectID
+            GROUP BY s.SubjectCode
+            LIMIT ? OFFSET ?
+        `, [limit, offset]);
+
+        const [[{ total }]] = await db.execute(`SELECT COUNT(DISTINCT s.SubjectCode) as total FROM Lessons l INNER JOIN Subjects s ON l.SubjectID = s.SubjectID`);
+
+        res.status(200).json({ data: rows, total });
+    } catch (error) {
+        console.error('Error fetching class list:', error);
         res.status(500).json({ error: error.message });
     }
 });
