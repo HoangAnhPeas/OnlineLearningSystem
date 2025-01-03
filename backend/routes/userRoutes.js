@@ -52,6 +52,14 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Thay đổi mật khẩu
+router.post('/user/:id/change-password', authenticateJWT, async (req, res) => {
+    if (req.user.id !== parseInt(req.params.id)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+    await userController.changePassword(req, res);
+});
+
 // Route lấy thông tin người dùng (cần xác thực)
 router.get('/user/:id', authenticateJWT, async (req, res) => {
     const userId = req.params.id;
@@ -62,24 +70,20 @@ router.get('/user/:id', authenticateJWT, async (req, res) => {
     }
 
     try {
-        // Lấy thông tin người dùng từ DB, bao gồm thông tin chi tiết (Students/Teachers)
+        // Lấy thông tin người dùng từ DB
         const [rows] = await db.execute(`
             SELECT 
                 u.UserID, 
                 u.Email, 
-                u.TeacherCheck, 
-                COALESCE(s.StudentName, t.TeacherName) AS Name 
+                u.TeacherCheck 
             FROM Users u
-            LEFT JOIN Students s ON u.UserID = s.UserID
-            LEFT JOIN Teachers t ON u.UserID = t.UserID
             WHERE u.UserID = ?
         `, [userId]);
 
         if (rows.length > 0) {
-            // Trả về thông tin chi tiết của người dùng
+            // Trả về thông tin người dùng
             res.json({
                 id: rows[0].UserID,
-                name: rows[0].Name,
                 email: rows[0].Email,
                 isTeacher: rows[0].TeacherCheck === 'Yes',
             });
@@ -103,20 +107,33 @@ router.get('/courses', async (req, res) => {
     }
 });
 
-// Route để lấy thông tin người dùng theo ID
-router.get('/user/:id', async (req, res) => {
+// Endpoint: Lấy thông tin người dùng theo ID
+router.get('/user/:id', authenticateJWT, async (req, res) => {
     const userId = req.params.id;
 
+    // Kiểm tra quyền truy cập
+    if (req.user.id !== parseInt(userId)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
     try {
-        const [rows] = await db.execute('SELECT * FROM users WHERE UserID = ?', [userId]);
+        const [rows] = await db.execute(`
+            SELECT UserID, Email, TeacherCheck 
+            FROM Users WHERE UserID = ?
+        `, [userId]);
+
         if (rows.length > 0) {
-            res.json(rows[0]);
+            res.json({
+                id: rows[0].UserID,
+                email: rows[0].Email,
+                isTeacher: rows[0].TeacherCheck === 'Yes',
+            });
         } else {
             res.status(404).json({ message: 'User not found' });
         }
     } catch (error) {
         console.error('Error fetching user data:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
