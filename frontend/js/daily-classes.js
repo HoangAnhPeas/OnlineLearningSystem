@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchDailyClasses();
 });
 
-// Tạo danh sách ngày trong tuần cho dropdown
 async function populateDateSelector() {
     const datePicker = document.getElementById('datePicker');
     const today = new Date();
@@ -24,10 +23,11 @@ async function populateDateSelector() {
     const days = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
 
     for (let i = 0; i < 7; i++) {
-        const dateOption = new Date();
+        const dateOption = new Date(today);
         dateOption.setDate(today.getDate() + i);
 
-        const dateString = dateOption.toISOString().split('T')[0];
+        // Đảm bảo ngày là ngày địa phương
+        const dateString = dateOption.toLocaleDateString('en-CA'); // Định dạng YYYY-MM-DD
 
         const option = document.createElement('option');
         option.value = dateString;
@@ -36,7 +36,8 @@ async function populateDateSelector() {
         datePicker.appendChild(option);
     }
 
-    datePicker.value = today.toISOString().split('T')[0];
+    // Đặt giá trị ngày hiện tại cho datePicker
+    datePicker.value = today.toLocaleDateString('en-CA'); // Sử dụng lại định dạng này
     datePicker.addEventListener('change', async () => {
         await updateSelectedDateUI();
         await fetchDailyClasses();
@@ -50,7 +51,7 @@ async function updateSelectedDateUI() {
 
     const dayNames = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
     const dayOfWeek = dayNames[selectedDate.getDay()];
-    const formattedDate = selectedDate.toLocaleDateString();
+    const formattedDate = selectedDate.toLocaleDateString(); // Hiển thị theo múi giờ địa phương
 
     document.getElementById('selectedDayOfWeek').textContent = dayOfWeek;
     document.getElementById('selectedDate').textContent = formattedDate;

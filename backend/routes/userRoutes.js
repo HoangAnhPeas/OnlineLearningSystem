@@ -1,24 +1,46 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const authenticateJWT = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET
 
 // Route login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Kiểm tra email và mật khẩu trong DB
-        const [users] = await db.execute('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
+        // Kiểm tra email và mật khẩu trong DB, kết hợp bảng Students và Teachers để lấy tên
+        const [users] = await db.execute(`
+            SELECT 
+                u.UserID, 
+                u.Email, 
+                u.TeacherCheck, 
+                COALESCE(s.StudentName, t.TeacherName) AS Name 
+            FROM Users u
+            LEFT JOIN Students s ON u.UserID = s.UserID
+            LEFT JOIN Teachers t ON u.UserID = t.UserID
+            WHERE u.Email = ? AND u.Password = ?
+        `, [email, password]);
 
         if (users.length > 0) {
-            // Nếu tìm thấy thông tin hợp lệ, trả về thông tin người dùng
+            // Tạo JWT token cho người dùng
+            const token = jwt.sign(
+                { id: users[0].UserID },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+
+            // Trả về thông tin người dùng và token
             return res.json({
                 message: 'Login successful',
                 user: {
-                    id: users[0].UserID, // Gửi thông tin ID và tên người dùng
+                    id: users[0].UserID,
                     name: users[0].Name,
-                    email: users[0].Email
-                }
+                    email: users[0].Email,
+                    isTeacher: users[0].TeacherCheck === 'Yes',
+                    token,
+                },
             });
         } else {
             // Nếu thông tin sai
@@ -27,6 +49,46 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         console.error('Error during login:', error);
         return res.status(500).json({ error: error.message });
+    }
+});
+
+// Route lấy thông tin người dùng (cần xác thực)
+router.get('/user/:id', authenticateJWT, async (req, res) => {
+    const userId = req.params.id;
+
+    // Kiểm tra ID người dùng trong token có trùng với ID trong URL không
+    if (req.user.id !== parseInt(userId)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    try {
+        // Lấy thông tin người dùng từ DB, bao gồm thông tin chi tiết (Students/Teachers)
+        const [rows] = await db.execute(`
+            SELECT 
+                u.UserID, 
+                u.Email, 
+                u.TeacherCheck, 
+                COALESCE(s.StudentName, t.TeacherName) AS Name 
+            FROM Users u
+            LEFT JOIN Students s ON u.UserID = s.UserID
+            LEFT JOIN Teachers t ON u.UserID = t.UserID
+            WHERE u.UserID = ?
+        `, [userId]);
+
+        if (rows.length > 0) {
+            // Trả về thông tin chi tiết của người dùng
+            res.json({
+                id: rows[0].UserID,
+                name: rows[0].Name,
+                email: rows[0].Email,
+                isTeacher: rows[0].TeacherCheck === 'Yes',
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 

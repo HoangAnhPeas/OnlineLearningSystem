@@ -27,10 +27,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (userData && userData.name) {
             studentName.textContent = userData.name;
         } else {
-            studentName.textContent = 'Tên Sinh Viên';
+            studentName.textContent = 'Tên Người dùng';
         }
     } catch (error) {
         console.error('Error fetching user data', error);
-        studentName.textContent = 'Tên Sinh Viên';
+        studentName.textContent = 'Tên người dùng';
     }
 });

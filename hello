@@ -20,3 +20,6 @@ OnlineLearningSystem/
 
 
 dùng lệnh này trong terminal để chạy: node backend/app.js 
+
+
+npm install jsonwebtoken

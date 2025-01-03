@@ -1,14 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const db = require('./config/db'); // Import db
 const userRoutes = require('./routes/userRoutes'); // Import routes
+require('dotenv').config(); // Tải biến môi trường
 
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json()); // Dùng express's built-in JSON body parser
 app.use(cors());
 
 // Kết nối các routes
