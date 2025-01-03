@@ -107,18 +107,21 @@
         </div>
     </div>
 
-    <!-- Popup modal -->
-    <div class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>THÔNG TIN LỚP HỌC</h3>
-                <hr>
+<!-- Popup modal -->
+<div class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Thông Tin Lớp Học</h3>
+            <hr>
+        </div>
+        <div class="modal-body">
+            <div class="modal-info">
+                <p><strong>Mã lớp:</strong> <span id="modalClassId"></span></p>
+                <p><strong>Tên lớp:</strong> <span id="modalClassName"></span></p>
             </div>
-            <div class="modal-body">
-                <p>Mã lớp: <span id="modalClassId"></span></p>
-                <p>Tên lớp: <span id="modalClassName"></span></p>
-                <hr>
-                <p>Thời khóa biểu</p>
+            <hr>
+            <p><strong>Thời Khóa Biểu:</strong></p>
+            <div class="schedule-options">
                 <label for="classScheduleLimit">Hiển thị tối đa: </label>
                 <select id="classScheduleLimit">
                     <option value="1">1</option>
@@ -132,43 +135,54 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
-                <table class="schedule-table">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Thời gian</th>
-                            <th>Giảng viên</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Từ ngày 01/01 đến ngày 03/01</td>
-                            <td>Giảng viên A</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Từ ngày 04/01 đến ngày 05/01</td>
-                            <td>Giảng viên B</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Từ ngày 06/01 đến ngày 10/01</td>
-                            <td>Giảng viên C</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Từ ngày 11/01 đến ngày 15/01</td>
-                            <td>Giảng viên D</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-            <div class="modal-footer">
-                <button class="close">Đóng</button>
-            </div>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Thời gian</th>
+                        <th>Thứ</th>
+                        <th>Tiết học</th>
+                        <th>Giảng viên</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Từ ngày 01/01 đến ngày 03/01</td>
+                        <td>Thứ 2</td>
+                        <td>Tiết 1 đến Tiết 3</td>
+                        <td>Giảng viên A</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Từ ngày 04/01 đến ngày 05/01</td>
+                        <td>Thứ 4</td>
+                        <td>Tiết 2 đến Tiết 4</td>
+                        <td>Giảng viên B</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Từ ngày 06/01 đến ngày 10/01</td>
+                        <td>Thứ 5</td>
+                        <td>Tiết 3 đến Tiết 5</td>
+                        <td>Giảng viên C</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Từ ngày 11/01 đến ngày 15/01</td>
+                        <td>Thứ 7</td>
+                        <td>Tiết 4 đến Tiết 6</td>
+                        <td>Giảng viên D</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="close">Đóng</button>
         </div>
     </div>
+</div>
 
     <script src="./js/class-list.js"></script>
 </body>

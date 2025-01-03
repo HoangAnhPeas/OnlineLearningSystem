@@ -10,6 +10,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: #ecf0f1;
 }
 
 /* Container chính */
@@ -211,6 +212,7 @@ p {
     padding: 5px;
 }
 
+
 /* Modal */
 .modal {
     display: none;
@@ -222,24 +224,108 @@ p {
     background: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
+    animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
-    background: white;
-    padding: 20px;
-    width: 60%;
+    background: #fff;
+    padding: 30px;
+    width: 70%;
     max-height: 80%;
     overflow-y: auto;
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .modal-header,
 .modal-footer {
     text-align: center;
+    padding: 10px 0;
 }
 
-.modal-body p {
-    margin: 5px 0;
+.modal-header h3 {
+    font-size: 24px;
+    color: #34495e;
+}
+
+.modal-body {
+    margin-top: 20px;
+}
+
+.modal-info p {
+    font-size: 16px;
+    color: #34495e;
+    margin: 10px 0;
+}
+
+.schedule-options {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.schedule-options label {
+    font-size: 16px;
+    color: #34495e;
+}
+
+.schedule-options select {
+    padding: 8px;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #34495e;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.schedule-table th {
+    background-color: #34495e;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+}
+
+.schedule-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.schedule-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.modal-footer .close {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-footer .close:hover {
+    background-color: #2980b9;
+}
+
+/* Hiệu ứng fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Table */
