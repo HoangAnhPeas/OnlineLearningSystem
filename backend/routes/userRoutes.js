@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
                     id: users[0].UserID,
                     name: users[0].Name,
                     email: users[0].Email,
-                    isTeacher: users[0].TeacherCheck === 'Yes',
+                    isTeacher: users[0].TeacherCheck === 'Yes',  // Phân biệt giáo viên và học sinh
                     token,
                 },
             });

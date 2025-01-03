@@ -126,7 +126,7 @@ function renderModal(data) {
             <td>Từ ${item.startDate} đến ${item.endDate}</td>
             <td>${item.weekDay}</td> <!-- Cập nhật để hiển thị thứ -->
             <td>${convertToLessonPeriod(item.timeStart, item.timeEnd)}</td> <!-- Hiển thị tiết học -->
-            <td>${item.teacherName}</td> <!-- Hiển thị giảng viên -->
+             <td><button style="background-color: #007bff; color: white; border: none; padding: 5px 10px; font-size: 14px; cursor: pointer; border-radius: 5px;">Điểm danh</button></td>
         `;
         scheduleTable.appendChild(row);
     });

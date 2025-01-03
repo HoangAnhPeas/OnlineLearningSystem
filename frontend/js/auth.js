@@ -15,14 +15,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     if (response.ok) {
         // Lưu thông tin người dùng vào localStorage
         localStorage.setItem('user', JSON.stringify(result.user));
-        window.location.href = './home.html';
+
+        // Điều hướng theo vai trò (giáo viên hay học sinh)
+        if (result.user.isTeacher) {
+            window.location.href = './t-home.html';  // Dành cho giáo viên
+        } else {
+            window.location.href = './home.html';  // Dành cho học sinh
+        }
     } else {
         document.getElementById('error-message').textContent = result.message || 'Login failed';
-    }
-    if (response.ok) {
-        const result = await response.json();
-        console.log(result); // Kiểm tra thông tin trả về từ backend
-        localStorage.setItem('user', JSON.stringify(result.user));
-        window.location.href = './home.html';
     }
 });
